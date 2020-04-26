@@ -2,7 +2,7 @@
  * @Author: zhengyifeng 
  * @Date: 2019-05-17 14:19:30 
  * @Last Modified by: zhengyifeng
- * @Last Modified time: 2019-11-01 14:01:38
+ * @Last Modified time: 2020-04-22 10:20:55
  */
 /*自定义打印方法*/
 function log() {
@@ -726,4 +726,43 @@ function removeClass(el, cls) {
     if (!el.classList) {
         el.className = trim(curClass);
     }
+}
+/**
+ * 判断数字输入是否合法，并且替换不合法的数字
+ */
+function checkNum(value){
+    var str = value;
+    var len1 = str.substr(0,1);
+    var len2 = str.substr(1,1);
+
+    //如果第一位是0，第二位不是点，就用数字把点替换掉
+    if(str.length > 1 && len1==0 && len2 != '.'){
+        str = str.substr(1,1);
+    }
+
+    //第一位不能是.
+    if(len1=='.'){
+        str = '';
+    }
+
+    //限制只能输入一个小数点
+    if(str.indexOf(".")!=-1){
+        var str_=str.substr(str.indexOf(".")+1);
+        //限制只能输入一个小数点
+        if(str_.indexOf(".")!=-1){
+            str=str.substr(0,str.indexOf(".")+str_.indexOf(".")+1);
+        }
+    }
+    //限制只能输入一个负号
+    if(str.indexOf("-")!=-1){
+        if (str.indexOf("-")>0){
+            str=str.substr(0,str.indexOf("-"));
+        }
+        var str_=str.substr(str.indexOf("-")+1);
+        //限制只能输入一个小数点
+        if(str_.indexOf("-")!=-1){
+            str=str.substr(0,str.indexOf("-")+str_.indexOf("-")+1);
+        }
+    }
+    return str.replace(/[^\-?\d.]/g,'').replace(/[\(\)\?]/g, '');
 }
