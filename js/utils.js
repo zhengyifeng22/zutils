@@ -796,5 +796,38 @@ function IEVersion(){
         }else{
             return -1;//不是ie浏览器
 	}
-
+}
+/**
+ * 判断是否是日期/或日期字符串
+ */
+function isDate(dateValue){
+    if(!dateValue) {
+        return false;
+    }
+    if (typeOf(dateValue) === 'date') {
+        return true;
+    }
+    if(typeof dateValue === 'number') {
+        return !isNaN(new Date(dateValue).getTime());
+    }
+    if (typeof dateValue !== 'string') {
+        return false;
+    }
+    //'yyyyy-M-d' or 'yyyy-MM-dd HH:mm:ss'
+    if (dateValue.length < 8 || dateValue.length > 19) {
+        return false;
+    }
+    var reg = /[^0-9-/: ]/g;
+    if(reg.test(dateValue)) {
+        return false;
+    }
+    var parts = dateValue.split(' ');
+    var dateReg = /^\d{4}(-)(1[0-2]|0?\d)\1([0-2]\d|\d|30|31)$/g;
+    var timeReg = /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/g;
+    var date = parts[0], time = parts[1];
+    if (parts.length > 2 || !dateReg.test(date) || (time && !timeReg.test(time))) {
+        return false;
+    }
+    var d = new Date(dateValue.replace(/-/g, "-"));
+    return !isNaN(d.getTime());
 }
