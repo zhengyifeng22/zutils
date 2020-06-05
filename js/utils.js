@@ -729,22 +729,22 @@ function removeClass(el, cls) {
 }
 /**
  * 判断数字输入是否合法，并且替换不合法的数字
+ * @param {String,Number} value
+ * @param {String} typ "ALL-全部数字/PN-正数（不包括0）/PINT-正整数（不包括0）/PNZ-正数（包括0）/PINTZ-正整数（包括0）"
  */
-function checkNum(value){
-    var str = value;
+function checkNum(value,typ){
+    var t = typ||"ALL";
+    var str = ""+value;
     var len1 = str.substr(0,1);
     var len2 = str.substr(1,1);
-
-    //如果第一位是0，第二位不是点，就用数字把点替换掉
+    //如果第一位是0，第二位不是点，就用第一位0去掉
     if(str.length > 1 && len1==0 && len2 != '.'){
         str = str.substr(1,1);
     }
-
     //第一位不能是.
     if(len1=='.'){
         str = '';
     }
-
     //限制只能输入一个小数点
     if(str.indexOf(".")!=-1){
         var str_=str.substr(str.indexOf(".")+1);
@@ -759,14 +759,30 @@ function checkNum(value){
             str=str.substr(0,str.indexOf("-"));
         }
         var str_=str.substr(str.indexOf("-")+1);
-        //限制只能输入一个小数点
+        //限制只能输入一个负号
         if(str_.indexOf("-")!=-1){
             str=str.substr(0,str.indexOf("-")+str_.indexOf("-")+1);
         }
     }
-    return str.replace(/[^\-?\d.]/g,'').replace(/[\(\)\?]/g, '');
+    var reg = /[^\-?\d\.]/g;
+    switch(t){
+        case "PN":
+            reg = /[^1-9\.]/g;
+            break;
+        case "PINT":
+            reg = /[^1-9]/g;
+            break;
+        case "PNZ":
+            reg = /[^\d\.]/g;
+            break;
+        case "PINTZ":
+            reg = /^\d/g;
+            break;
+        default:
+            reg = /[^\-?\d\.]/g
+    }
+    return str.replace(reg,'');
 }
-/*
 * 判断IE的版本
 */
 function IEVersion(){
