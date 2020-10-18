@@ -880,3 +880,31 @@ function isDate(dateValue){
     var d = new Date(dateValue.replace(/-/g, "-"));
     return !isNaN(d.getTime());
 }
+/**
+ * 获取屏幕DPI
+ */
+function getDPI(){
+    var arrDPI = new Array();
+    if ( window.screen.deviceXDPI != undefined ) {
+        arrDPI[0] = window.screen.deviceXDPI;
+        arrDPI[1] = window.screen.deviceYDPI;
+    }else {
+        var tmpNode = document.createElement( "DIV" );
+        tmpNode.style.cssText = "width:1in;height:1in;position:absolute;left:0px;top:0px;z-index:99;visibility:hidden";
+        document.body.appendChild( tmpNode );
+        arrDPI[0] = parseInt( tmpNode.offsetWidth );
+        arrDPI[1] = parseInt( tmpNode.offsetHeight );
+        tmpNode.parentNode.removeChild( tmpNode );
+    }
+    return arrDPI;
+}
+/**
+ * mm转px
+ * 
+ */
+function mmToPx(d){
+    if(d){
+        var DPI = getDPI();
+        return Math.round(d*DPI[1]/25.4);
+    }
+}
